@@ -1,0 +1,25 @@
+apiVersion : v1
+kind: Pod #что создаём
+metadata:
+   name: my-web
+   labels:
+      env: prod
+      app: MyWeb
+      owner: pavel
+      seq: qwerty
+spec: #Указываем, какой image использовать
+  containers:
+      - name: container-tomcat #Создание 1-го контейнера
+        image: tomcat:latest
+        ports:
+          - containerPort: 80
+          
+      - name: second-nginx #Создание 2-го контейнера
+        image: nginx:latest
+        ports:
+          - containerPort: 123
+       
+kubectl apply -f pods.yaml  #Запуск
+kubectl delete -f pods.yaml
+
+   
