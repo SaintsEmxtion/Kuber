@@ -1,0 +1,12 @@
+kubectl run "name" --image="image" #запуск пода
+kubectl run hello --image=tomcat
+kubectl run hello --image=tomcat --port=80 #Открываем 80 порт в нашем поде
+kubectl get pods #просмотр подов
+kubectl delete pods "name" #Удаление пода
+kubectl delete pods hello
+kubectl describe pods hello #Полная информация о поде
+kubectl exec hello "command" #Выполнение определённой команды на нашем поде
+kubectl exec hello date
+kubectl exec -it hello shell#Интерактивный запуск термианала нашего пода
+kubectl logs hello #просмотр логов пода
+kubectl port-forward hello 123:80 #Проброс портов
