@@ -1,0 +1,42 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+    name: my-autoscaling
+    labels:
+       app: my-autoscaling
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+       project: first-autoscaling
+  template:
+    metadata:
+      labels:
+       project: first-autoscaling
+    spec:
+      containers:
+        - name: my-autoscaling
+          image: nginx
+          ports:
+            - containerPort: 80
+            
+apiVersion : autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-autoscaling
+spec: 
+  scaleTargetRef:
+     apiVersion: apps/v2beta1v1
+     kind: Deployment
+     name: my-web-deployment-autoscaling
+  minReplicas: 3
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 80
