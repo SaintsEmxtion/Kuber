@@ -1,7 +1,7 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-    name: my-autoscaling
+    name: my-web-deployment-autoscaling
     labels:
        app: my-autoscaling
 spec:
@@ -35,7 +35,7 @@ spec:
   - type: Resource
     resource:
       name: cpu
-      targetAverageUtilization: 70
+      targetAverageUtilization: 70 #При превышении загрузки CPU 70
   - type: Resource
     resource:
       name: memory
