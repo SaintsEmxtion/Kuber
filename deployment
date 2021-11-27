@@ -1,8 +1,13 @@
-deployment #Сет дубликатов подов
+deployment #Сет дубликатов подов. Грубо говоря, деплоймент распределяет наргрузку между нашими подами. Если нода с рабочим подом сдохнет, деплой создаст копию пода на другой ноде. 
 kubectl create deployment first-deployment --image tomcat #создание деплоя
 Scaling deploy#создание дубликата пода
 kubectl scale deploy first-deployment --replicas 4 
 #При удалении пода, будет мгновенно запускаться заместо него ещё один под. Т.е реплика сет постоянно будет держать запущенными 4 пода. Если удаляем один под, сразу же запускается другой под.
 kubectl autoscale deploy first --min=4 --max=6 --cpu=80
 kubectl rollout status deploy/first #Просмотр статуса нашего деплоя
-kubectl rollout undo deploy/firs #возврат нашего деплоя на предыдущую версию (если был апдейт)
+kubectl set image deploy/first tomcat=tomcat:latest --record #Обновление наших подов. 
+kubectl rollout undo deploy/first #возврат нашего деплоя на предыдущую версию (если был апдейт)
+kubectl rollout history deploy/first #История обновлений подов.
+kubectl rollout undo deploy/first --to-revision=2 #Откат нашего пода на 2 версию
+
+
