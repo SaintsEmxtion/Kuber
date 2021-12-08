@@ -1,0 +1,18 @@
+kubectl create ns dev #Создания пространства имён с именем dev
+--- #Создание пода в пространстве dev
+apiVersion: v1
+kind: Pod
+metadata:
+    name: test-ns
+    namespace: dev
+    labels:
+       app: test-with-new-ns
+spec:
+   containers:
+   - name: test-ns
+     image: tomcat:latest
+     ports:
+     - containerPort: 80
+---
+kubectl get pods --all-namespaces #просмотр подов во всех пространствах
+kubectl delete ns dev #Удаление пространства dev
