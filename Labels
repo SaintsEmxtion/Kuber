@@ -1,0 +1,11 @@
+kubectl label po имя пода сама метка
+kubectl label po my-web app=web-server#Присваивание метки app поду.
+kubectl get pods -L env #просмотр лейблов у подов
+---
+selector labels
+kubectl get pods -l app #Данная команда выводит все поды с меткой app
+kubectl get pods -l '!app' #данная команда выводит все поды, в которых нет метки app
+kubectl get pods -l '!app in (web)' #Данная команда выводит все поды с меткой app в значении web
+kubectl get pods -l '!app notin (web)' #Данная команда выводит все поды с меткой app не в значении web
+---
+kubectl label node minikube gpu-true#Присваивание метки ноде minikube
