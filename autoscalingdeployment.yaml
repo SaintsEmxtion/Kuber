@@ -17,7 +17,7 @@ spec:
       containers:
         - name: my-autoscaling
           image: nginx
-          ports:
+          ports: #comment
             - containerPort: 80
             
 apiVersion : autoscaling/v2beta1
