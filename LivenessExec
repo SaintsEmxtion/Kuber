@@ -1,0 +1,27 @@
+Kubelet использует liveness пробу для проверки, когда перезапустить контейнер. Например, liveness проба должна поймать блокировку, когда приложение запущено, но не может ничего сделать. В этом случае перезапуск приложения может помочь сделать приложение более доступным, несмотря на баги.
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-exec
+spec:
+  containers:
+  - name: liveness
+    image: k8s.gcr.io/busybox
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
+    livenessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 5 #он должен ждать 5 секунд перед первой пробой
+      periodSeconds: 5 #определяет, что kubelet должен производить liveness пробы каждые 5 секунд
+      
+      Когда контейнер запускается, он исполняет команду
+/bin/sh -c "touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600"
+Для первых 30 секунд жизни контейнера существует файл /tmp/healthy. Поэтому в течение первых 30 секунд команда cat /tmp/healthy возвращает код успеха. После 30 секунд cat /tmp/healthy возвращает код ошибки.
+kubectl describe pod liveness-exec #просмотр событий pod
