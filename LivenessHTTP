@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-http
+spec:
+  containers:
+  - name: liveness
+    image: k8s.gcr.io/liveness
+    args:
+    - /server
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+        httpHeaders:
+        - name: Custom-Header
+          value: Awesome
+      initialDelaySeconds: 3
+      periodSeconds: 3
+      #Для проведения пробы kubelet отправляет запрос HTTP GET на сервер, который запущен в контейнере и слушает порт 8080. 
+      #Если обработчик пути /healthz на сервере возвращает код успеха, kubelet рассматривает контейнер как живой и здоровый. 
+      #Если обработчик возвращает код ошибки, kubelet убивает и перезапускает контейнер.
