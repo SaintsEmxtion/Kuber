@@ -1,0 +1,21 @@
+#DaemonSet позволяет держать на каждой ноде по одному поду. Это необходимо, допустим, для сбора логов с конкретной ноды, мониторинг конкретной ноды и пр.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: first-daemoset
+  labels:
+    app: daemoset
+spec:
+  selector:
+    matchLabels:
+      project: kuber-daemoset
+  template:
+    metadata:
+      labels:
+        project: kuber-daemoset
+    spec:
+      containers:
+        - name: kuber-app
+          image: emxtion/k8sphp
+          ports:
+            - containerPort: 8080
