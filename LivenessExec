@@ -9,7 +9,7 @@ spec:
   containers:
   - name: liveness
     image: k8s.gcr.io/busybox
-    args:
+    args: #Вводим аргументы, которые будут выполняться в контейнере после создания пода
     - /bin/sh
     - -c
     - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
@@ -20,6 +20,9 @@ spec:
         - /tmp/healthy
       initialDelaySeconds: 5 #он должен ждать 5 секунд перед первой пробой
       periodSeconds: 5 #определяет, что kubelet должен производить liveness пробы каждые 5 секунд
+      successThreshold: 1
+      failureThreshold: 3 #После трёх неудачных попыток проверки под убивается и далее уходит в перегазгрузку
+      Для просмотра  в командной строке вводим kubectl get events --watch
       
       Когда контейнер запускается, он исполняет команду
 /bin/sh -c "touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600"
