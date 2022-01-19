@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+  labels:
+    maintainer: emxtion
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: web-site
+  template:
+    metadata:
+      labels:
+        project: web-site
+    spec:
+      containers:
+        - name: web-server
+          image: emxtion/k8sphp
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadbalancer-kuber
+spec:
+  selector:
+    app: http-server
+  ports:
+    - protocols: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 1234
+ type: NodePort
