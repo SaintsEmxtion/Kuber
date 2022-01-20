@@ -26,4 +26,8 @@ metadata:
   name: fuck-police
   labels:
     maintainer: Pavel
+ 
+Дабы каждый пользователь мог работать в своём неймспейсе необходимо создать контексты.
+kubectl config set-context fuck-police --namespace=fuck-police --user=user --cluster=qwerty (создаём контекст в неймспейсе для пользователя user)\
+kubectl config use-context dev. Создавать контексты необходимо, если вы не хотите постоянно указывать флагом нужный вам namespace
 
