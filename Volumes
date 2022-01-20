@@ -1,0 +1,30 @@
+### EMPTYDIR ### Он создаёт некую директорию на ноде, в которую записывает все данные.
+Грубо говоря, мы создаём директорию на наших подах, в которой сохранится вся информация, записанная с контейнеров даже после их удаления. Всё, что записано в этой директоии доступно всем подам, находящихся на этой ноде
+Если под крашится, то при перезагрузке пода данные, сохранённые в наш маун патч не стираются.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+  labels:
+    maintainer: emxtion
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: web-site
+  template:
+    metadata:
+      labels:
+        project: web-site
+    spec:
+      containers:
+        - name: web-server
+          image: emxtion/k8sphp
+          ports:
+          - containerPort: 80
+          volumeMounts:
+          - mountPath: /cache
+            name: cache-volumes
+      volumes:
+      - name: cache-volumes
+        emptyDir: {}
