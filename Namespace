@@ -17,3 +17,13 @@ spec:
 ---
 kubectl get pods --all-namespaces #просмотр подов во всех пространствах
 kubectl delete ns dev #Удаление пространства dev
+
+Create ns manifest file
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fuck-police
+  labels:
+    maintainer: Pavel
+
