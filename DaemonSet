@@ -1,21 +1,25 @@
-#DaemonSet позволяет держать на каждой ноде по одному поду. Это необходимо, допустим, для сбора логов с конкретной ноды, мониторинг конкретной ноды и пр.
+#DaemonSet в свою очередь является контроллером, основным назначением которого является запуск подов на всех нодах кластера: если нода добавляется/удаляется – DaemonSet автоматически добавит/удалит под на этой ноде.
+#DaemonSet подходят для запуска приложений, которые должны работать на всех нодах, например – екпортёры мониторинга, сбор логов и так далее.
+#При этом некоторые ноды, например Мастер нода, будет отвергать запуск подов на этой ноде (см. Taints and Tolerations), т.к. ему задан node-role.kubernetes.io/master:NoSchedule:
+#Соотвественно, при создании DaemonSet, который должен создавать поды в т.ч. на Мастер-ноде – ему необходимо указать tolerations.
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: first-daemoset
-  labels:
-    app: daemoset
+  name: my-nginx-ds
 spec:
   selector:
     matchLabels:
-      project: kuber-daemoset
-  template:
+      app: my-nginx-pod
+  template: 
     metadata:
-      labels:
-        project: kuber-daemoset
+      labels: 
+        app: my-nginx-pod
     spec:
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
       containers:
-        - name: kuber-app
-          image: emxtion/k8sphp
-          ports:
-            - containerPort: 8080
+      - name: nginx-container
+        image: nginx
+        ports:
+        - containerPort: 80
