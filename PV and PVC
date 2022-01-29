@@ -1,2 +1,50 @@
 PV (persistent volume (постоянные тома)) - грубо говоря, это некий жёсткий диск
 PVC (persistent volume claim) - это некая часть жёсткого диска (pv), выделенная под определённые нуждны
+Create PV
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-nfs-share
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 10.1.4.39
+    path: /mnt/nfs
+ 
+ Create PVC
+ 
+ ---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: fileshare
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+      
+ Подключение хранилища к поду
+ 
+ kind: Pod
+apiVersion: v1
+metadata:
+  name: pod-with-nfs
+spec:
+  containers:
+    - name: app
+      image: alpine
+      volumeMounts:
+      - name: data
+        mountPath: /mnt/nfs
+      command: ["/bin/sh"]
+      args: ["-c", "sleep 500000"]
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: fileshare
