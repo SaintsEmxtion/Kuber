@@ -4,31 +4,33 @@ Create PV
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: my-nfs-share
+        name: pv2-nfs
+        labels:
+                app: wordpress
 spec:
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  nfs:
-    server: 10.1.4.39
-    path: /mnt/nfs
- 
+        capacity:
+                storage: 1.5Gi
+        accessModes:
+                - ReadWriteMany
+        storageClassName: nfs
+        nfs:
+                server: 192.168.1.62
+                path: "/mnt/swarm" 
  Create PVC
- 
  ---
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: fileshare
+        name: pvc2-nfs
+        labels:
+                app: wordpress
 spec:
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Gi
-      
+        storageClassName: nfs
+        accessModes:
+                - ReadWriteMany
+        resources:
+                requests:
+                        storage: 500Mi    
  Подключение хранилища к поду
  
  kind: Pod
