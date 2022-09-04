@@ -1,1 +1,3 @@
-
+Configuration ceph:
+ceph osd pool create k8s
+ceph auth add client.kube mon 'allow r' osd 'allow rwx pool=kube' - создание клиента с полными правами на пул k8s
