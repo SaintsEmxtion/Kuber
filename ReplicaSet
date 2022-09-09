@@ -1,0 +1,22 @@
+ReplicaSet - механизм, который поддерживает определённую реплику подов постоянно 
+
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+        name: first-replica
+spec:
+        replicas: 3
+        selector:
+                app: k3s
+        template:
+                metadata:
+                        name: k3sapp
+                        labels:
+                                app: k3s
+                spec:
+                        containers:
+                                - name: k3s-test-image
+                                  image: nginx:latest
+                                  ports:
+                                          - containerPort: 80
