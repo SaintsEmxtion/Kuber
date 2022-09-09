@@ -1,4 +1,4 @@
-ReplicaSet - механизм, который поддерживает определённую реплику подов постоянно 
+ReplicaController - механизм, который поддерживает определённую реплику подов постоянно 
 Поды репликасет ищет по меткам. В случае создание отдельного пода с такой же меткой, как у репликейшнконтроллера, под не будет создан, а будет записан контроллером и в случае падения рабочего пода он будет создан
 ---
 apiVersion: v1
@@ -20,3 +20,30 @@ spec:
                                   image: nginx:latest
                                   ports:
                                           - containerPort: 80
+ReplicaSet - усовершенствованный ReplicaController и применяется в сущности Deployment
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+        name: rskuber
+spec:
+        replicas: 6
+        selector:
+                matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                                  - kuber
+                                  - http-server
+                        - key: env
+                          operator: Exists
+        template:
+                metadata:
+                        labels:
+                                app: kuber
+                                env: dev
+                spec:
+                        containers:
+                                - name: nginx
+                                  image: nginx:latest
+matchExptrssions - поды с одной из меток kuber, либо же http-server будут включены в ReplicaSet. Операторы - In, not in, exist, not exist
