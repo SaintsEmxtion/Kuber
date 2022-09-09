@@ -1,0 +1,37 @@
+RollingUpdate - механизм, который позволяет обновлять поды путём плавного перехода от одной версии к другой. Т.е он создаёт один под новой версии и только после этого удаляет под старой версии и так происходит с каждым подомю.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: wordpress
+        labels:
+                app: wordpress
+spec:
+        replicas: 3
+        strategy:
+          rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 1
+          type: RollingUpdate
+        selector:
+                matchLabels:
+                        app: wordpress
+        template:
+                metadata:
+                         labels:
+                                app: wordpress
+                spec:
+                        containers:
+                                - name: wordpress
+                                  image: wordpress
+                                  ports:
+                                          - containerPort: 80
+                                  env:
+                                          - name: WORDPRESS_DB_HOST
+                                            value: mysql-service
+                                          - name: WORDPRESS_DB_USER
+                                            value: wpuser
+                                          - name: WORDPRESS_DB_PASSWORD
+                                            value: wppassword
+                                          - name: WORDPRESS_DB_DATABASE
+                                            value: wpdb
