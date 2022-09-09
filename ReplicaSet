@@ -47,3 +47,4 @@ spec:
                                 - name: nginx
                                   image: nginx:latest
 matchExptrssions - поды с одной из меток kuber, либо же http-server будут включены в ReplicaSet. Операторы - In, not in, exist, not exist
+operator exist - т.е, если существует под с данным лейблом, то он будет включён в ReplicaSet
