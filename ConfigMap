@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+        name: demo-cm
+data:
+        interval: "6"
+        count: "4"
+        properties: |
+                Hello wordl!
+                qfqwf!
+                fwqf
+        config.ini: "This is demo config!"
+Благодаря ConfigMap можно передавать переменные окружения, различные файлы конфигурации поду
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: test
+spec:
+        replicas: 1
+        selector:
+                matchLabels:
+                        project: test
+        template:
+                metadata:
+                        labels:
+                                project: test
+                spec:
+                        containers:
+                                - name: test
+                                  image: emxtion/k8sphp
+                                  ports:
+                                          - containerPort: 80
+                                  envFrom: #Передача перменных окружения поду из configMap
+                                          - configMapRef:
+                                                  name: demo-cm
