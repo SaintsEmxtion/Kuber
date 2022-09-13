@@ -33,3 +33,59 @@ spec:
                                   envFrom: #Передача перменных окружения поду из configMap
                                           - configMapRef:
                                                   name: demo-cm
+
+
+########################Передача конфигурационного файла поду############################
+apiVersion: v1
+kind: ConfigMap
+metadata:
+        name: nginx
+data:
+        nginx.conf: |
+                server {
+                        listen 80;
+                        location / {
+                                proxy_pass http://192.168.1.142:31894;
+                        }
+                }
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: nginxproxy
+spec:
+        selector:
+                matchLabels:
+                        project: proxy
+        template:
+                metadata:
+                        labels:
+                                project: proxy
+                spec:
+                        containers:
+                               - name: nginx
+                                 image: nginx
+                                 ports:
+                                         - containerPort: 80
+                                 volumeMounts:
+                                         - name: nginx-conf
+                                           mountPath: /etc/nginx/conf.d/
+                                           readOnly: true
+                        volumes:
+                                - name: nginx-conf
+                                  configMap:
+                                          name: nginx
+apiVersion: v1
+kind: Service
+metadata:
+        name: nginx
+spec:
+        selector:
+                project: proxy
+        ports:
+                - protocol: TCP
+                  port: 80
+                  targetPort: 80
+        type: NodePort
+
